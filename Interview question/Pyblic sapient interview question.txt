@@ -1,0 +1,6 @@
+Role-Senior Automation Engineer
+
+Core java, selenium, git, jenkin, BDD
+
+1) What is multiple inheritance
+2) try 

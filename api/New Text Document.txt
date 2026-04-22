@@ -1,0 +1,312 @@
+# 🎧 Spotify API Automation Test Plan (Python + Pytest)
+
+---
+
+## 🧭 OVERALL FLOW
+
+```
+1. Authorization Setup (Manual - One Time)
+2. Generate Access Token (Using Refresh Token)
+3. User Profile APIs
+4. Playlist APIs (CRUD)
+5. Track APIs
+6. Negative Testing
+7. Cleanup
+```
+
+---
+
+# 🔐 PHASE 1: AUTHENTICATION
+
+## ✅ TC01: Generate Authorization Code (Manual)
+
+**Purpose:** Get authorization code from Spotify login
+
+**Steps:**
+
+1. Open authorize URL
+2. Login to Spotify
+3. Accept permissions
+4. Capture `code` from redirect URL
+
+**Expected Result:**
+
+* URL contains `code=XXXX`
+
+---
+
+## ✅ TC02: Exchange Code → Access + Refresh Token
+
+**API:** POST `/api/token`
+
+**Validations:**
+
+* Status code = 200
+* access_token present
+* refresh_token present
+* expires_in present
+
+**Note:**
+
+* Save `refresh_token` for automation
+
+---
+
+## ✅ TC03: Generate Access Token (Automated)
+
+**API:** POST `/api/token`
+
+**Request:**
+
+* grant_type = refresh_token
+* refresh_token = stored value
+
+**Validations:**
+
+* Status = 200
+* access_token generated
+
+---
+
+# 👤 PHASE 2: USER PROFILE
+
+## ✅ TC04: Get Current User Profile
+
+**API:** GET `/v1/me`
+
+**Validations:**
+
+* Status = 200
+* id is not null
+* email exists
+* country exists
+
+---
+
+## ✅ TC05: Get User Playlists
+
+**API:** GET `/v1/me/playlists`
+
+**Validations:**
+
+* Status = 200
+* items list present
+
+---
+
+# 🎵 PHASE 3: PLAYLIST (CRUD)
+
+## ✅ TC06: Create Playlist
+
+**API:** POST `/v1/users/{user_id}/playlists`
+
+**Body:**
+
+```
+{
+  "name": "Test Playlist API",
+  "description": "Created via automation",
+  "public": false
+}
+```
+
+**Validations:**
+
+* Status = 201
+* playlist_id generated
+
+---
+
+## ✅ TC07: Get Playlist
+
+**API:** GET `/v1/playlists/{playlist_id}`
+
+**Validations:**
+
+* Name matches
+* Description matches
+
+---
+
+## ✅ TC08: Update Playlist
+
+**API:** PUT `/v1/playlists/{playlist_id}`
+
+**Body:**
+
+```
+{
+  "name": "Updated Playlist",
+  "description": "Updated via API"
+}
+```
+
+**Validations:**
+
+* Status = 200
+
+---
+
+## ✅ TC09: Add Track to Playlist
+
+**API:** POST `/v1/playlists/{playlist_id}/tracks`
+
+**Body:**
+
+```
+{
+  "uris": ["spotify:track:TRACK_ID"]
+}
+```
+
+**Validations:**
+
+* snapshot_id returned
+
+---
+
+## ✅ TC10: Get Playlist Tracks
+
+**API:** GET `/v1/playlists/{playlist_id}/tracks`
+
+**Validations:**
+
+* Track exists in response
+
+---
+
+## ✅ TC11: Remove Track
+
+**API:** DELETE `/v1/playlists/{playlist_id}/tracks`
+
+**Validations:**
+
+* Track removed
+
+---
+
+# 🔍 PHASE 4: TRACK APIs
+
+## ✅ TC12: Search Track
+
+**API:** GET `/v1/search?q=track&type=track`
+
+**Validations:**
+
+* Results returned
+* Track id present
+
+---
+
+## ✅ TC13: Get Track Details
+
+**API:** GET `/v1/tracks/{id}`
+
+**Validations:**
+
+* Name not null
+* Duration exists
+
+---
+
+# ❌ PHASE 5: NEGATIVE TESTING
+
+## ✅ TC14: Invalid Token
+
+**Expected:**
+
+* Status = 401
+
+---
+
+## ✅ TC15: Missing Authorization Header
+
+**Expected:**
+
+* Status = 401
+
+---
+
+## ✅ TC16: Invalid Playlist ID
+
+**Expected:**
+
+* Status = 404
+
+---
+
+## ✅ TC17: Invalid Track URI
+
+**Expected:**
+
+* Error response
+
+---
+
+# 🔄 PHASE 6: CLEANUP
+
+## ✅ TC18: Delete Playlist
+
+**API:** DELETE `/v1/playlists/{playlist_id}/followers`
+
+**Validations:**
+
+* Status = 200
+
+---
+
+# 🧱 PYTEST STRUCTURE
+
+```
+tests/
+│
+├── test_auth.py
+├── test_user.py
+├── test_playlist.py
+├── test_tracks.py
+├── test_negative.py
+│
+├── conftest.py
+├── utils/
+│   ├── api_client.py
+│   ├── auth_helper.py
+│   └── config.py
+```
+
+---
+
+# 🚀 IMPORTANT NOTES
+
+### 🔹 Token Handling
+
+* Store refresh token once
+* Generate access token dynamically
+
+### 🔹 Data Sharing
+
+Use pytest fixtures for:
+
+* access_token
+* user_id
+* playlist_id
+
+### 🔹 Best Practices
+
+* Centralized headers
+* Reusable API client
+* Logging + reporting
+
+---
+
+# ✅ NEXT STEP
+
+Start implementation in this order:
+
+1. Auth Helper (Refresh Token API)
+2. Token Fixture (conftest.py)
+3. First Test → Get User Profile
+4. Then Playlist APIs
+
+---
+
+👉 Goal: Build complete end-to-end API automation framework

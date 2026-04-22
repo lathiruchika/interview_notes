@@ -1,0 +1,17 @@
+1) What are various type of wait in selenium?
+2) How many Tc you can automate in a day?
+3) what is the difference between page object method and page object factory?
+4) what are the OOPS concept you have used in selenium ?
+5) How can you select a drop down ?
+6) How you  select automation tool?
+7) what is the difference between qtp and selenium?
+8) advantages of selenium?
+9) difference between run time exception and comppile time exception?
+10) difference between interface and abstarct class
+11) final keyword 
+12) Has set and list  difference
+13) collection concept
+14) palindrom program
+15) disadvantage of selenium
+
+

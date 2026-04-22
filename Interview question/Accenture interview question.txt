@@ -1,0 +1,12 @@
+1) What are the advantage and disadvantage of selenium ?
+2) What are the various types of locators used in selenium?
+3) What is the difference between relative xpath and absolute xpath?
+4) what are the various type of wait?
+5) write a program for fabonicci series
+6) how you will select a drop down by using a selenium?
+7)  quest on postman ?
+8) HTTP method
+9) http status code
+9) environment variabl declaration 
+10) soap ui
+11) wsdl? webservise? soap and rest diff?
